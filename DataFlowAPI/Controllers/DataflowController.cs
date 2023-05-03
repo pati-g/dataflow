@@ -1,3 +1,5 @@
+using DataFlowAPI.DTOs;
+using DataFlowAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DataFlowAPI.Controllers
@@ -31,9 +33,9 @@ namespace DataFlowAPI.Controllers
                 _logger.LogWarning("Null or empty property {prop} in the query of type {type}", nameof(dto.Filepath), typeof(RequestDto));
                 return BadRequest("Please provide the filepath of the datasource");
             }
-            if (string.IsNullOrEmpty(dto.Delimeter))
+            if (dto.Delimeter == default(char))
             {
-                _logger.LogWarning("Null or empty property {prop} in the query of type {type}", nameof(dto.Delimeter), typeof(RequestDto));
+                _logger.LogWarning("Default property {prop} in the query of type {type}", nameof(dto.Delimeter), typeof(RequestDto));
                 return BadRequest("Please provide the delimeter type for the data");
             }
 

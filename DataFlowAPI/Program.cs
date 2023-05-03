@@ -1,5 +1,4 @@
-
-using DataFlowAPI.Controllers;
+using DataFlowAPI.Services;
 
 namespace DataFlowAPI
 {
@@ -13,6 +12,7 @@ namespace DataFlowAPI
 
             builder.Services.AddControllers();
             builder.Services.AddScoped<IDataflowService, DataflowService>();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
