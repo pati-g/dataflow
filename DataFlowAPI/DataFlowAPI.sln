@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFlowAPI", "DataFlowAPI.csproj", "{E53C12F5-14D0-4635-BC49-59906332907F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E53C12F5-14D0-4635-BC49-59906332907F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E53C12F5-14D0-4635-BC49-59906332907F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E53C12F5-14D0-4635-BC49-59906332907F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E53C12F5-14D0-4635-BC49-59906332907F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BD5BE0C8-DE7A-477F-A9B6-4396B98F14DF}
+	EndGlobalSection
+EndGlobal
