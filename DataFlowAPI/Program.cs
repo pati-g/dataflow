@@ -12,6 +12,9 @@ namespace DataFlowAPI
 
             builder.Services.AddControllers();
             builder.Services.AddScoped<IDataflowService, DataflowService>();
+            builder.Services.AddScoped<ICsvReader, CsvReader>();
+            builder.Services.AddScoped<ICsvWriter, CsvWriter>();
+            builder.Services.AddLogging();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

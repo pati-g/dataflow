@@ -17,21 +17,21 @@ namespace DataFlowAPI.Controllers
             _service = service;
         }
 
-        [HttpPost()]
+        [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> CreateNewDataflow([FromQuery] RequestDto dto)
+        public async Task<IActionResult> MergeCsvByIdColumn([FromQuery] RequestDto dto)
         {
             if(dto == null)
             {
                 _logger.LogWarning("Null argument of type {arg}", typeof(RequestDto));
-                return BadRequest("Please provide the filepath of the datasource and the delimeter type");
+                return BadRequest("Please provide the filepath for the datasource and the delimeter type");
             }
             if (string.IsNullOrEmpty(dto.Filepath))
             {
                 _logger.LogWarning("Null or empty property {prop} in the query of type {type}", nameof(dto.Filepath), typeof(RequestDto));
-                return BadRequest("Please provide the filepath of the datasource");
+                return BadRequest("Please provide the filepath for the datasource");
             }
             if (dto.Delimeter == default(char))
             {
@@ -43,8 +43,8 @@ namespace DataFlowAPI.Controllers
 
             if (resultPath == null)
             {
-                _logger.LogInformation("Resource has not been found, pathfile: {path}", dto.Filepath);
-                return NotFound($"No resource found for the file path: {dto.Filepath}");
+                _logger.LogInformation("No resources have been found, pathfile: {path}", dto.Filepath);
+                return NotFound($"No resources found in the file path: {dto.Filepath}");
             }
             return Ok(resultPath);
         }

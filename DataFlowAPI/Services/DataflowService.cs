@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Analysis;
+﻿using DataFlowAPI.Utils;
+using Microsoft.Data.Analysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -6,43 +7,46 @@ namespace DataFlowAPI.Services
 {
     public class DataflowService : IDataflowService
     {
-        private const string IdColumnPattern = "^ide*n*t*i*f*i*e*r*c*a*t*o*r*$";
+        private const string _idColumnPattern = "^ide*n*t*i*f*i*e*r*c*a*t*o*r*$";
+        private readonly ICsvReader _reader;
+        private readonly ICsvWriter _writer;
+        private readonly ILogger<DataflowService> _logger;
+
+        public DataflowService(ICsvReader reader, ICsvWriter writer, ILogger<DataflowService> logger)
+        {
+            _reader = reader;
+            _writer = writer;
+            _logger = logger;
+        }
 
         public async Task<string?> ProcessDataAsync(string filepath, char delimeter)
         {
-            ValidateParams(filepath, delimeter);
+            Validator.ValidateParams(filepath, delimeter);
 
-            var dfList = new List<DataFrame>();
-
-            // Create a dataframe from the file
-            foreach (var file in Directory.EnumerateFiles(filepath, "*.csv"))
-            {
-                LoadCsvFileToList(delimeter, dfList, file);
-            }
+            var dfList = await _reader.ParseCsvFilesFromDirectory(filepath, delimeter);
 
             if (dfList.Count == 0)
             {
+                _logger.LogWarning("CSV reader {reader} returned an empty list, no CSV files found", nameof(_reader));
                 return null;
             }
             var dfMerged = MergeDataFrames(dfList);
 
-            // Save the merged dataframe as csv file and return the filepath
-            var fileName = $"{filepath}-combined.csv";
-            var savePath = Path.Combine(filepath, fileName);
-            DataFrame.SaveCsv(dfMerged, savePath, delimeter, true, null, CultureInfo.InvariantCulture);
-            return savePath;
-        }
-
-        private static void LoadCsvFileToList(char delimeter, List<DataFrame> dfList, string file)
-        {
-            var dataFrame = DataFrame.LoadCsv(file, delimeter);
-            dfList.Add(dataFrame);
+            try
+            {
+                return await _writer.SaveDataFrameAsCsv(filepath, delimeter, dfMerged);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning("CSV writer {wr} failed to save the output CSV file. \n Exception message: {msg}", nameof(_writer), ex.Message);
+                return null;
+            }
         }
 
         private static DataFrame MergeDataFrames(List<DataFrame> dfList)
         {
             var dfMerged = dfList[0];
-            var key = dfMerged.Columns.FirstOrDefault(c => Regex.IsMatch(c.Name, IdColumnPattern)) ?? throw new ArgumentException("No appropriate ID column has been found");
+            var key = dfMerged.Columns.FirstOrDefault(c => Regex.IsMatch(c.Name, _idColumnPattern)) ?? throw new ArgumentException("No appropriate ID column has been found");
             if (dfList.Count > 1)
             {
                 for (int i = 1; i < dfList.Count; i++)
@@ -52,19 +56,6 @@ namespace DataFlowAPI.Services
                 }
             }
             return dfMerged;
-        }
-
-        // Validate the filepath and the delimeter
-        private static void ValidateParams(string filepath, char delimeter)
-        {
-            if (delimeter == default(char))
-            {
-                throw new ArgumentException($"Argument {nameof(delimeter)} has not been provided");
-            }
-            if (string.IsNullOrEmpty(filepath) || !Directory.Exists(filepath))
-            {
-                throw new ArgumentException($"No valid argument for {nameof(filepath)} has been provided");
-            }
         }
     }
 }
