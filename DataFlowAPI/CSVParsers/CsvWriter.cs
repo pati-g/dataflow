@@ -1,9 +1,9 @@
 ﻿using Microsoft.Data.Analysis;
 using System.Globalization;
 
-namespace DataFlowAPI.Services
+namespace DataFlowAPI.CSVParsers
 {
-    public class CsvWriter: ICsvWriter
+    public class CsvWriter : ICsvWriter
     {
         // Save the merged dataframe as csv file and return the filepath
         public async Task<string> SaveDataFrameAsCsv(string filepath, char delimeter, DataFrame dfMerged)
