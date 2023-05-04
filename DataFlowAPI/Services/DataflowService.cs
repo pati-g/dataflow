@@ -1,6 +1,6 @@
-﻿using DataFlowAPI.Utils;
+﻿using DataFlowAPI.CSVParsers;
+using DataFlowAPI.Utils;
 using Microsoft.Data.Analysis;
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace DataFlowAPI.Services
@@ -52,7 +52,10 @@ namespace DataFlowAPI.Services
                 for (int i = 1; i < dfList.Count; i++)
                 {
                     var df = dfList[i];
-                    dfMerged = dfMerged.Merge(df, new string[] { key.Name }, new string[] { key.Name });
+                    if (df.Columns.Select(c => c.Name).Contains(key.Name))
+                    {
+                        dfMerged = dfMerged.Merge(df, new string[] { key.Name }, new string[] { key.Name });
+                    }
                 }
             }
             return dfMerged;

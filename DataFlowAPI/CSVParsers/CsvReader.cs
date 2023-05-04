@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Analysis;
 
-namespace DataFlowAPI.Services
+namespace DataFlowAPI.CSVParsers
 {
     public class CsvReader : ICsvReader
     {
